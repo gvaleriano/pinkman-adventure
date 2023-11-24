@@ -12,7 +12,9 @@ public class Player : MonoBehaviour
     public float jumpForce;
     public int life;
     public int numberMelons;
+    public int numberKiwi;
     public int numberMushroom;
+    public int numberSlime;
 
     //Unity Variables
     [Header("Components")]
@@ -24,8 +26,13 @@ public class Player : MonoBehaviour
     [Header("UI")]
     public TextMeshProUGUI melonText;
     public TextMeshProUGUI mushText;
+    public TextMeshProUGUI kiwiText;
+    public TextMeshProUGUI slimeText;
     public TextMeshProUGUI lifeText;
     public GameObject gameOver;
+    public GameObject level1Ui;
+    public GameObject level2Ui;
+
 
     //Private variables
     private Vector2 direction;
@@ -38,7 +45,6 @@ public class Player : MonoBehaviour
         gameOver.SetActive(false);
         lifeText.text = "- " + life.ToString();
         Time.timeScale = 1;
-        //Debug.Log(isDead);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -54,12 +60,22 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         Movement();
+        VerifyLevel();
     }
 
     //Player walk
     void Movement()
     {
         rigid.velocity = new Vector2(direction.x * speed, rigid.velocity.y);
+    }
+
+    void VerifyLevel()
+    {
+        if(SceneManager.GetActiveScene().name == "Level2")
+        {
+            kiwiText.enabled = true;
+            melonText.enabled = false;
+        }
     }
 
     //Player jump
@@ -160,10 +176,22 @@ public class Player : MonoBehaviour
             melonText.text = "x " + numberMelons.ToString();
         }
 
+        if (objCollected == "Kiwi")
+        {
+            numberKiwi++;
+            kiwiText.text = "x " + numberKiwi.ToString();
+        }
+
         if (objCollected == "Mushroom")
         {
             numberMushroom++;
             mushText.text = "x " + numberMushroom.ToString();
+        }
+
+        if (objCollected == "Slime")
+        {
+            numberSlime++;
+            slimeText.text = "x " + numberSlime.ToString();
         }
     }
 
@@ -173,8 +201,27 @@ public class Player : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("Level1");
+        
     }
+
+    public void setUi(string level)
+    {
+        if(level == "Level1")
+        {
+            level1Ui.SetActive(true);
+            level2Ui.SetActive(false);
+            lifeText.color = new Color32(149, 86, 37, 255);
+        }
+        else if(level == "Level2")
+        {
+            level1Ui.SetActive(false);
+            level2Ui.SetActive(true);
+            lifeText.color = new Color32(38, 159, 123, 255);
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.layer == 8)

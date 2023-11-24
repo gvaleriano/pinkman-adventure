@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mushroom : MonoBehaviour
+public class Kiwi : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            //Collect mushroom to inventory and destroy object
-            //collision.GetComponent<Player>().numberMushroom++;
-            collision.GetComponent<Player>().CollectObjects("Mushroom");
+            //Collect kiwi to inventory and destroy object
+            //collision.GetComponent<Player>().numberKiwi++;
+            collision.GetComponent<Player>().CollectObjects("Kiwi");
             Destroy(gameObject);
         }
     }
